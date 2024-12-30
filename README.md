@@ -64,10 +64,10 @@ A 3D analysis file is [available](./Magnetics-3D.FCStd).  This is the work-in-pr
 13. Close out the Task dialog (don't add any Geometry referenes)
 14. Select the MaterialFluid again and go to its Data Property View
 15. On the references line, click '...'
-16. Select the Air body and click OK.
+16. Open the Boolean Fragments container and select the Air body. Click OK.
 17. Add a MaterialSolid
 18. Select Iron-Generic
-19. Again in the Data Property View, open the References dialog and select both magnet bodies.
+19. Again in the Data Property View, open the References dialog and select both magnet bodies within the Boolean Fragments.
 20. To the Solver, add a Magnetization Boundary Constraint
 21. Add a Z magnetization of 5000, click OK.
 22. Add the magnet bodies in the same manner as you did for the solid propety.
