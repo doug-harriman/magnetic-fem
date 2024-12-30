@@ -47,6 +47,36 @@ A 3D analysis file is [available](./Magnetics-3D.FCStd).  This is the work-in-pr
     * [FreeCAD FEM Workbench issue](https://github.com/FreeCAD/FreeCAD/issues/18759)
         * As of 28-Dec-2024, the issue has been placed into the road map to be addressed.  No code patches yet.
 
+### Process
+
+1. Create bodies for all magnetic elements (have not tried using parts yet, just bodies)
+2. Create body for enclosing volume (air, vacuum, etc.)
+3. Select all of the created bodies
+4. From the Part Workbench (not Part Design), use the `Boolean Fragments` tool to gather all of the bodies into a Boolean Fragment.
+5. Open the FEB Workbench
+6. Create an Analysis Container
+7. Delete the default solver in the container.
+8. Create an Elmer Solver in the Analysis container.
+9. Select the Elmer Solver
+10. Add a MagnetoDynamicEquation to the Solver.
+11. Select the Analysis Container
+12. Add a MaterialFluid (for air)
+13. Close out the Task dialog (don't add any Geometry referenes)
+14. Select the MaterialFluid again and go to its Data Property View
+15. On the references line, click '...'
+16. Select the Air body and click OK.
+17. Add a MaterialSolid
+18. Select Iron-Generic
+19. Again in the Data Property View, open the References dialog and select both magnet bodies.
+20. To the Solver, add a Magnetization Boundary Constraint
+21. Add a Z magnetization of 5000, click OK.
+22. Add the magnet bodies in the same manner as you did for the solid propety.
+23. Click the Boolean Fragments container.
+24. Click the GMsh icon to create the mesh.
+25. Set properties
+  * Element Dimension: From Shap
+  * Element order: 1st
+
 ### General Learnings
 
 *   Finicky about bodies/solids.  
