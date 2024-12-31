@@ -53,29 +53,37 @@ A 3D analysis file is [available](./Magnetics-3D.FCStd).  This is the work-in-pr
 2. Create body for enclosing volume (air, vacuum, etc.)
 3. Select all of the created bodies
 4. From the Part Workbench (not Part Design), use the `Boolean Fragments` tool to gather all of the bodies into a Boolean Fragment.
-5. Open the FEB Workbench
-6. Create an Analysis Container
-7. Delete the default solver in the container.
-8. Create an Elmer Solver in the Analysis container.
-9. Select the Elmer Solver
-10. Add a MagnetoDynamicEquation to the Solver.
-11. Select the Analysis Container
-12. Add a MaterialFluid (for air)
-13. Close out the Task dialog (don't add any Geometry referenes)
-14. Select the MaterialFluid again and go to its Data Property View
-15. On the references line, click '...'
-16. Open the Boolean Fragments container and select the Air body. Click OK.
-17. Add a MaterialSolid
-18. Select Iron-Generic
-19. Again in the Data Property View, open the References dialog and select both magnet bodies within the Boolean Fragments.
-20. To the Solver, add a Magnetization Boundary Constraint
-21. Add a Z magnetization of 5000, click OK.
-22. Add the magnet bodies in the same manner as you did for the solid propety.
-23. Click the Boolean Fragments container.
-24. Click the GMsh icon to create the mesh.
-25. Set properties
+   * This operation cuts the bodies withing the encosing volume out of that volume.  When the Boolean Fragment object is then meshed, this keeps the system from having overlapping meshes.
+6. Open the FEB Workbench
+7. Create an Analysis Container
+8. Delete the default solver in the container.
+9. Create an Elmer Solver in the Analysis container.
+10. Select the Elmer Solver
+11. Add a MagnetoDynamicEquation to the Solver.
+12. Select the Analysis Container
+13. Add a MaterialFluid (for air)
+14. Close out the Task dialog (don't add any Geometry referenes)
+15. Select the MaterialFluid again and go to its Data Property View
+16. On the references line, click '...'
+17. Open the Boolean Fragments container and select the Boolean Fragments object. 
+1.  Double click to the right of the Boolean Fragments object.  The field should become editable.
+2.  Type in the name of the solid assicated with the enclosing volume.  At this time, the best guess for the identifier is `Solid<N>` where N is the number of the body within the Boolean Fragment object.  Ex: if the encosing volume is the third object in the Boolean Fragment object, you would use `3`.
+18. Add a MaterialSolid
+19. Select Iron-Generic
+20. Again in the Data Property View, open the References dialog and manually enter the identifier for the Solids used.  For multiple Solids, separate the values with a comma (`,`).
+21. To the Solver, add a Magnetization Boundary Constraint
+22. Add a Z magnetization of 5000, click OK.
+23. Add the magnet bodies in the same manner as you did for the solid propety.
+24. Click the Boolean Fragments container.
+25. Click the GMsh icon to create the mesh.
+26. Set properties
   * Element Dimension: From Shap
   * Element order: 1st
+
+To-do items:
+
+- [ ] Add in screenshots of each step.
+- [ ] Generate a YouTube video demonstrating the process.
 
 ### General Learnings
 
@@ -88,10 +96,10 @@ A 3D analysis file is [available](./Magnetics-3D.FCStd).  This is the work-in-pr
     *   Linear System
         *   `Bi CGstabl Degree` = 4
         *   `Linear Iterative Method` = Bi CGstabl 
-        *   `Linear Preconditioning` = None
-        *   `Linear Solver Type` = Iterative
+        *   `Linear Preconditioning` = None $larr; Unclear if strictly necessary.  Review resources to find source. 
+        *   `Linear Solver Type` = Iterative $larr; Unclear if strictly necessary.  Review resources to find source. 
     *   Magnetodynamic
-        *   `Angular Frequency` = 0
+        *   `Angular Frequency` = 0 &larr; Doing magneto static analysis, not high frequency field generation.
     *   Results
         *   `Calculate Magnetic Field Strength` = True
         *   `Calculate Nodal Fields` = True
