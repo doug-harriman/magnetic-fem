@@ -1,0 +1,93 @@
+# List Solid names associated with Bodeies in FreeCAD.
+from FreeCAD import ActiveDocument as doc
+import numpy as np
+
+"""
+Per: https://github.com/FreeCAD/FreeCAD/issues/18759#issuecomment-2566797990
+
+To be on the safe side, it's best to consider boolean fragments as the starting point.
+You can track solids by comparing their faces to each face in the boolean fragment using
+isPartner, isSame, isEqual Part.Shape methods (see the documentation for these methods).
+This code snippet might help you highlight the faces of a given solid in the 3D view:
+"""
+
+# Make available in FreeCAD
+"""
+from importlib import reload
+import sys
+sys.path.append("L:\\\home\\harriman\\Projects\\FreeCAD-List-Solids")
+from list_solids import map
+"""
+
+
+# Get the boolean fragments
+# We expect to only have one boolean fragment in the document.
+if not hasattr(doc, "BooleanFragments"):
+    raise Exception("No BooleanFragments in the document")
+
+bf = doc.BooleanFragments
+
+# List of bodies in the BooleanFragments
+# body Label holds name.
+bodies = [obj for obj in bf.Objects if obj.TypeId == "PartDesign::Body"]
+bodynames = [body.Label for body in bodies]
+print(f"Bodies: {bodynames}")
+
+# List of solids in the BooleanFragments
+solids = {}
+for i in range(1, len(bodies) + 1):
+    name = f"Solid{i}"
+
+    if bf.getSubObject(name).Faces:
+        solids[name] = bf.getSubObject(name).Faces
+
+solidnames = list(solids.keys())
+print(f"Solids: {solidnames}")
+
+# The containting volume solid will not match the number of faces as the similar body.
+# Other should all match face count.
+
+# Generate mapping of solid to body by matching a face.
+body2solid = {}
+for body in bodies:
+    for solidname in solids:
+        if len(solids[solidname]) != len(body.Shape.Faces):
+            continue
+
+        print(f"Checking: {body.Label} {solidname}")
+
+        for solidface in solids[solidname]:
+            for bodyface in body.Shape.Faces:
+                # Area check
+                if not np.isclose(bodyface.Area, solidface.Area):
+                    continue
+
+                print(f"Area close: {bodyface.Area} {solidface.Area}")
+
+                # BoundBox - check for full overlap
+                if solidface.BoundBox.isInside(
+                    bodyface.BoundBox
+                ) or bodyface.BoundBox.isInside(solidface.BoundBox):
+                    print("\tmatched")
+                    body2solid[body.Label] = solidname
+
+print(f"Mapping: {body2solid}")
+
+# Map the containing volume names.
+body_container = set(bodynames) - set(body2solid.keys())
+solid_container = set(solidnames) - set(body2solid.values())
+
+print(f"Body Container: {body_container}")
+print(f"Solid Container: {solid_container}")
+
+body2solid[list(body_container)[0]] = list(solid_container)[0]
+
+print(f"Mapping: {body2solid}")
+
+# Add property to the bodies
+prop = "BooleanFragmetSolid"
+for body in bodies:
+    if not hasattr(body, prop):
+        body.addProperty("App::PropertyString", prop, group="Experimental")
+
+    setattr(body, prop, body2solid[body.Label])
