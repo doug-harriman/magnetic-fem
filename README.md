@@ -67,7 +67,8 @@ A 3D analysis file is [available](./Magnetics-3D.FCStd).  This is the work-in-pr
 16. On the references line, click '...'
 17. Open the Boolean Fragments container and select the Boolean Fragments object. 
 1.  Double click to the right of the Boolean Fragments object.  The field should become editable.
-2.  Type in the name of the solid assicated with the enclosing volume.  At this time, the best guess for the identifier is `Solid<N>` where N is the number of the body within the Boolean Fragment object.  Ex: if the encosing volume is the third object in the Boolean Fragment object, you would use `3`.
+2.  Type in the name of the solid assicated with the enclosing volume.
+3.  The macro [mapsolids](https://github.com/doug-harriman/magnetic-fem/blob/main/mapsolids.FCMacro) in this repo attempts to map the Solid names to the associated bodies on the Boolean Fragment.  A propery is added to each Body in the Boolean Fragment with the name of the Solid.  Use this Solid name.
 18. Add a MaterialSolid
 19. Select Iron-Generic
 20. Again in the Data Property View, open the References dialog and manually enter the identifier for the Solids used.  For multiple Solids, separate the values with a comma (`,`).
