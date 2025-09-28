@@ -4,6 +4,8 @@ This repository is a knowledge base for the finite element analysis of magnetic 
 
 Personal notes in [Trilium](http://192.168.0.120:32768/#root/P98MayPro1wY/4mDbopUfYitU/m1I8QkAZD0sh?ntxId=SgPeyt).
 
+Online class for [Electrical Machine FEM](https://nptel.ac.in/courses/108101167)
+
 ## 2D Magnetic Analysis
 
 ### FEMM
